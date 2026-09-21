@@ -56,7 +56,6 @@
 #'   analisis_datos(datos_rendimiento_maiz, "rendimiento_maiz_ton_ha")
 #'
 #' @importFrom stats lm glm step cor shapiro.test arima gaussian binomial poisson acf
-#' @importFrom utils menu
 #' @import ggplot2
 #' @export
 analisis_datos <- function(data, variable_objetivo, verbose = TRUE) {
@@ -80,24 +79,7 @@ analisis_datos <- function(data, variable_objetivo, verbose = TRUE) {
   p_externas <- length(vars_x)
   # ---------------------------------------------
 
-  # 1. Deteccion de Series de Tiempo
-  col_fecha <- names(data)[sapply(data, inherits, what = c("Date", "POSIXct", "POSIXt"))]
-  tiene_fecha <- length(col_fecha) == 1
-  hay_autocorr <- FALSE
-
-  if (tiene_fecha) {
-    # Ordenar por fecha y probar autocorrelacion
-    data <- data[order(data[[col_fecha]]), ]
-    y_ord <- data[[variable_objetivo]]
-    acf_obj <- try(stats::acf(y_ord, plot = FALSE), silent = TRUE)
-    if (!inherits(acf_obj, "try-error")) {
-      limite_acf <- 2 / sqrt(length(y_ord))
-      hay_autocorr <- any(abs(acf_obj$acf[-1]) > limite_acf)
-    }
-  }
-  es_ts <- tiene_fecha && hay_autocorr
-
-  # --- 2. Deteccion Automatica y Menu Interactivo 
+  # --- 2. Deteccion Automatica y Menu Interactivo ---
   col_fecha <- NULL
 
   # 1. Buscar si ya existe columna fecha nativa
@@ -135,6 +117,14 @@ analisis_datos <- function(data, variable_objetivo, verbose = TRUE) {
   if (tiene_fecha) {
     data <- data[order(data[[col_fecha]]), ] # Ordenar cronologicamente
     y_ord <- data[[variable_objetivo]]
+
+    # CORRECCION: Reasignamos 'y' con la serie ya ordenada cronologicamente.
+    # Sin esto, el grid search de ARIMA/AR/MA/ARMA (Opcion 3) y el codigo
+    # sugerido al usuario terminaban usando la serie en su orden ORIGINAL
+    # (potencialmente desordenada), invalidando la deteccion de autocorrelacion
+    # y el ajuste de los modelos de series de tiempo.
+    y <- y_ord
+
     acf_obj <- try(stats::acf(y_ord, plot = FALSE), silent = TRUE)
     if (!inherits(acf_obj, "try-error")) {
       limite_acf <- 2 / sqrt(length(y_ord))
@@ -163,8 +153,12 @@ analisis_datos <- function(data, variable_objetivo, verbose = TRUE) {
     razon_sugerencia <- "Variable de Conteo (Poisson)."
   }
 
-  # --- 2C. Menu Visual (Protegido para CRAN) ---
-  if (interactive() && verbose) {
+  # --- 2C. Menu Visual ---
+  # Se controla unicamente con 'verbose': un usuario que ejecute la funcion
+  # con verbose = TRUE desde un script (Rscript, .Rmd, etc.) debe ver la
+  # salida igual que en una sesion interactiva. 'interactive()' solo se usa
+  # mas abajo para decidir si se puede pedir input con readline().
+  if (verbose) {
     cat("\nAsistente de Analisis de Datos\n")
     cat("===========================================\n")
     cat(sprintf("   Base de datos: %s\n", nombre_data))
@@ -200,9 +194,9 @@ analisis_datos <- function(data, variable_objetivo, verbose = TRUE) {
   if (seleccion == "") {
     seleccion <- opcion_sugerida
     
-    # Usamos message() en lugar de cat() para que sea suprimible
-    # Y solo lo mostramos si estamos en una sesion interactiva para no molestar en los tests
-    if (interactive() && verbose) {
+    # Usamos message() en lugar de cat() para que sea suprimible.
+    # Se muestra siempre que verbose = TRUE (no solo en sesiones interactivas).
+    if (verbose) {
       message(sprintf("-> Seleccion automatica aplicada: %s", seleccion))
     }
   }
@@ -288,7 +282,7 @@ analisis_datos <- function(data, variable_objetivo, verbose = TRUE) {
       nombre_mod <- "modelo_log"
       familia <- "binomial"
       
-      if (interactive() && verbose) {
+      if (verbose) {
         cat("   -> Detectada Variable Binaria. Sugerencia: Regresion Logistica.\n")
       }
       
@@ -301,7 +295,7 @@ analisis_datos <- function(data, variable_objetivo, verbose = TRUE) {
       nombre_mod <- "modelo_pois"
       familia <- "poisson"
       
-      if (interactive() && verbose) {
+      if (verbose) {
         cat("   -> Detectada Variable de Conteo. Sugerencia: Regresion Poisson.\n")
       }
       
@@ -314,7 +308,7 @@ analisis_datos <- function(data, variable_objetivo, verbose = TRUE) {
       nombre_mod <- "modelo_glm"
       familia <- "gaussian"
       
-      if (interactive() && verbose) {
+      if (verbose) {
         cat("Tipo ambiguo. Usando configuracion generica.\n")
       }
       
@@ -438,7 +432,7 @@ analisis_datos <- function(data, variable_objetivo, verbose = TRUE) {
   }
 
   # --- 4. Salida Final ---
-  if (interactive() && verbose) {
+  if (verbose) {
     cat("\n ANALISIS COMPLETADO.\n")
     
     if (explicacion != "") {
