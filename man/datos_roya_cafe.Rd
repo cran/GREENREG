@@ -3,38 +3,38 @@
 \docType{data}
 \name{datos_roya_cafe}
 \alias{datos_roya_cafe}
-\title{Presencia de roya del cafe en diferentes localidades}
+\title{Presencia de roya del café en diferentes localidades}
 \format{
 Un data frame con 300 observaciones y 4 variables:
 \describe{
-\item{presencia_roya}{Presencia (1) o ausencia (0) de roya del cafe}
-\item{humedad_relativa_pct}{Humedad relativa promedio (\%)}
-\item{altitud_msnm}{Altitud de la finca (m s.n.m.)}
-\item{manejo_sombra}{Porcentaje de cobertura de sombra en la plantacion}
+  \item{presencia_roya}{Presencia (1) o ausencia (0) de roya del café}
+  \item{humedad_relativa_pct}{Humedad relativa promedio (\%)}
+  \item{altitud_msnm}{Altitud de la finca (m s.n.m.)}
+  \item{manejo_sombra}{Porcentaje de cobertura de sombra en la plantacion}
 }
 }
 \source{
-Elaboracion propia con fines didacticos basada en informacion de SIAP e INIFAP.
+Elaboracion propia con fines didacticos basada en información de SIAP e INIFAP.
 }
 \usage{
 datos_roya_cafe
 }
 \description{
-Base de datos simulada que presenta la presencia/ausencia de roya del cafe
+Base de datos simulada que presenta la presencia/ausencia de roya del café
 junto con variables ambientales y de manejo agronomico relevantes.
-Es util para ejercicios de regresion logistica.
+Es útil para ejercicios de regresión logística.
 }
 \details{
-Los datos fueron generados de forma controlada utilizando parametros
+Los datos fueron generados de forma controlada utilizando parámetros
 similares a los observados por SIAP y estudios agronomicos del INIFAP.
-Esta base fue creada para ser utilizada en funciones de regresion logistica del paquete \pkg{GREENREG}.
+Esta base fue creada para ser utilizada en funciones de regresión logística del paquete \pkg{GREENREG}.
 }
 \examples{
 data(datos_roya_cafe)
-modelo_log <- logistico(presencia_roya ~ humedad_relativa_pct + 
-                        altitud_msnm + manejo_sombra, 
+modelo_log <- greenreg_logistico(presencia_roya ~ humedad_relativa_pct +
+                        altitud_msnm + manejo_sombra,
                         data = datos_roya_cafe)
-                        
+
 
 }
 \keyword{datasets}

@@ -1,7 +1,7 @@
-#' Niveles de agua en presas de Mexico
+#' Niveles de agua en presas de México
 #'
 #' Conjunto de datos que presenta los niveles de almacenamiento de agua
-#' registrados en distintas presas y fechas, util para analisis de series de tiempo
+#' registrados en distintas presas y fechas, útil para análisis de series de tiempo
 #' y modelos ARIMA.
 #'
 #' @format Un data frame con 1825 observaciones y 2 variables:
@@ -17,7 +17,7 @@
 #' @examples
 #' data("datos_nivel_presa")
 #' ts_data <- datos_nivel_presa$nivel_m
-#' modelo_ARIMA <- modelo_arima(ts_data, p = 1, d = 1, q = 1)
+#' modelo_ARIMA <- greenreg_modelo_arima(ts_data, p = 1, d = 1, q = 1)
 #' print(modelo_ARIMA)
 #' plot(modelo_ARIMA)
 #'

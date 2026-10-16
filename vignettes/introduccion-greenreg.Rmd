@@ -1,0 +1,110 @@
+---
+title: "Introduccion a GREENREG"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduccion a GREENREG}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
+)
+```
+
+## Que es GREENREG
+
+**GREENREG** es un paquete pensado para facilitar el ajuste, la validacion
+de supuestos y la interpretacion de modelos estadisticos comunes en
+ciencias agropecuarias y ambientales, sin tener que escribir a mano las
+pruebas de diagnostico cada vez.
+
+Incluye funciones para:
+
+- Regresion Lineal Simple (`greenreg_rls()`) y Multiple (`greenreg_rlm()`)
+- Regresion Logistica (`greenreg_logistico()`) y de Poisson (`greenreg_reg_poisson()`)
+- Modelos de series de tiempo: AR, MA, ARMA y ARIMA
+  (`greenreg_modelo_ar()`, `greenreg_modelo_ma()`, `greenreg_modelo_arma()`, `greenreg_modelo_arima()`)
+- `greenreg_analisis_datos()`, que sugiere que modelo usar segun el tipo de la
+  variable respuesta
+
+```{r setup}
+library(GREENREG)
+```
+
+## Regresion Lineal Multiple
+
+El flujo tipico es: ajustar el modelo, imprimirlo (para leer coeficientes,
+VIF y el veredicto de los supuestos) y graficarlo (para inspeccionar los
+diagnosticos visualmente).
+
+```{r}
+data(datos_rendimiento_maiz)
+
+modelo <- greenreg_rlm(rendimiento_maiz_ton_ha ~ ., data = datos_rendimiento_maiz)
+modelo
+```
+
+`print()` reporta, en orden: los coeficientes con sus intervalos de
+confianza, el Factor de Inflacion de la Varianza (VIF) para detectar
+multicolinealidad, y una bateria de pruebas de supuestos (normalidad,
+homocedasticidad, independencia y linealidad) traducidas a un veredicto
+accionable.
+
+```{r, fig.alt = "Diagnosticos graficos del modelo de regresion lineal multiple"}
+plot(modelo)
+```
+
+`plot()` genera una secuencia de graficas de diagnostico: distribucion de
+variables, relacion Y vs. cada predictor, ajuste observado-vs-predicho,
+QQ-plot de normalidad, homocedasticidad, independencia, VIF, distancia de
+Cook y apalancamiento (leverage).
+
+## Regresion Logistica
+
+```{r}
+data(datos_roya_cafe)
+
+modelo_log <- greenreg_logistico(
+  presencia_roya ~ humedad_relativa_pct + altitud_msnm + manejo_sombra,
+  data = datos_roya_cafe
+)
+modelo_log
+```
+
+El resultado incluye los momios (Odds Ratio), la pseudo-R2 de McFadden, la
+matriz de confusion y el area bajo la curva ROC (AUC).
+
+## Series de tiempo
+
+```{r}
+data(datos_anomalia_temperatura)
+
+modelo_ts <- greenreg_modelo_ar(datos_anomalia_temperatura$anomalia_c, p = 2)
+modelo_ts
+```
+
+`greenreg_modelo_ar()` (y sus analogos `greenreg_modelo_ma()`, `greenreg_modelo_arma()`,
+`greenreg_modelo_arima()`) reportan la estabilidad del modelo (raices inversas
+dentro del circulo unitario), y el diagnostico de residuos mediante la
+prueba de Ljung-Box (ruido blanco) y Shapiro-Wilk (normalidad).
+
+## Que modelo debo usar
+
+Cuando no es evidente que tipo de modelo conviene, `greenreg_analisis_datos()`
+inspecciona la variable respuesta y sugiere una opcion:
+
+```{r}
+greenreg_analisis_datos(datos_rendimiento_maiz, "rendimiento_maiz_ton_ha")
+```
+
+## Para saber mas
+
+Consulta la documentacion de cada funcion (por ejemplo, `?greenreg_rlm`) para el
+detalle de cada estadistico reportado y las referencias metodologicas
+(Montgomery et al., 2021; Box & Jenkins, 1970) en las que se basa el
+paquete.

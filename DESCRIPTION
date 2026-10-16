@@ -1,6 +1,6 @@
 Package: GREENREG
 Title: Tool for Statistical and Environmental Analysis
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: c(
     person("Dayron Jared", "Bazan Guzman", , "dbazanguzman@gmail.com",
            role = c("aut", "cre")),
@@ -10,16 +10,16 @@ Authors@R: c(
            comment = c(affiliation = "Universidad Autónoma Chapingo",
                        secondary_email = "jcbuendiae@hotmail.com")),
     person("Diego Ernesto", "Lira González",
-           role = "ctb",
+           role = "rev",
            comment = "Secretario del comité de tesis, Universidad Autónoma Chapingo"),
     person("Israel", "Lerma Serna",
-           role = "ctb",
+           role = "rev",
            comment = "Vocal del comité de tesis, Universidad Autónoma Chapingo"),
     person("Juan Uriel", "Avelar Roblero",
-           role = "ctb",
+           role = "rev",
            comment = "Suplente del comité de tesis, Universidad Autónoma Chapingo"),
     person("Elisa del Carmen", "Martínez Ochoa",
-           role = "ctb",
+           role = "rev",
            comment = "Suplente del comité de tesis, Universidad Autónoma Chapingo")
     )
 Description: Provides a set of accessible and automated functions to apply 
@@ -35,28 +35,33 @@ Description: Provides a set of accessible and automated functions to apply
     of the thesis committee: Diego Ernesto Lira González (secretary), Israel 
     Lerma Serna (member), Juan Uriel Avelar Roblero (alternate), and Elisa del 
     Carmen Martínez Ochoa (alternate). Methods for regression and time series 
-    are based on Montgomery et al. (2021, ISBN:978-1119570141) and 
-    Box & Jenkins (1970, ISBN:978-0816211043).
+    are based on Montgomery, Peck & Vining (2021, Introduction to Linear
+    Regression Analysis, 6th ed., Wiley, ISBN:978-1119578727) and
+    Box, Jenkins, Reinsel & Ljung (2015, Time Series Analysis: Forecasting
+    and Control, 5th ed., Wiley, ISBN:978-1118675021).
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.3
 Depends: R (>= 3.5)
 Imports: ggplot2, ggrepel, stats, lmtest
-Suggests: pROC, broom, car
+Suggests: pROC, broom, car, testthat (>= 3.0.0), AER, forecast, knitr,
+        rmarkdown
+VignetteBuilder: knitr
+Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2026-09-19 06:16:54 UTC; dbaza
+Packaged: 2026-10-15 16:01:33 UTC; dbaza
 Author: Dayron Jared Bazan Guzman [aut, cre],
   Julio César Buendía Espinoza [aut, ths] (affiliation: Universidad
     Autónoma Chapingo, secondary_email: jcbuendiae@hotmail.com),
-  Diego Ernesto Lira González [ctb] (Secretario del comité de tesis,
+  Diego Ernesto Lira González [rev] (Secretario del comité de tesis,
     Universidad Autónoma Chapingo),
-  Israel Lerma Serna [ctb] (Vocal del comité de tesis, Universidad
+  Israel Lerma Serna [rev] (Vocal del comité de tesis, Universidad
     Autónoma Chapingo),
-  Juan Uriel Avelar Roblero [ctb] (Suplente del comité de tesis,
+  Juan Uriel Avelar Roblero [rev] (Suplente del comité de tesis,
     Universidad Autónoma Chapingo),
-  Elisa del Carmen Martínez Ochoa [ctb] (Suplente del comité de tesis,
+  Elisa del Carmen Martínez Ochoa [rev] (Suplente del comité de tesis,
     Universidad Autónoma Chapingo)
 Maintainer: Dayron Jared Bazan Guzman <dbazanguzman@gmail.com>
 Repository: CRAN
-Date/Publication: 2026-09-21 10:00:46 UTC
+Date/Publication: 2026-10-16 09:10:09 UTC

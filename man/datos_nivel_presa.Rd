@@ -3,12 +3,12 @@
 \docType{data}
 \name{datos_nivel_presa}
 \alias{datos_nivel_presa}
-\title{Niveles de agua en presas de Mexico}
+\title{Niveles de agua en presas de México}
 \format{
 Un data frame con 1825 observaciones y 2 variables:
 \describe{
-\item{fecha}{Fecha del registro (AAAA-MM-DD)}
-\item{nivel_m}{Nivel de almacenamiento de la presa (metros)}
+  \item{fecha}{Fecha del registro (AAAA-MM-DD)}
+  \item{nivel_m}{Nivel de almacenamiento de la presa (metros)}
 }
 }
 \source{
@@ -19,7 +19,7 @@ datos_nivel_presa
 }
 \description{
 Conjunto de datos que presenta los niveles de almacenamiento de agua
-registrados en distintas presas y fechas, util para analisis de series de tiempo
+registrados en distintas presas y fechas, útil para análisis de series de tiempo
 y modelos ARIMA.
 }
 \details{
@@ -30,7 +30,7 @@ didacticos para demostrar la aplicacion de modelos AR, MA y ARIMA en \pkg{GREENR
 \examples{
 data("datos_nivel_presa")
 ts_data <- datos_nivel_presa$nivel_m
-modelo_ARIMA <- modelo_arima(ts_data, p = 1, d = 1, q = 1)
+modelo_ARIMA <- greenreg_modelo_arima(ts_data, p = 1, d = 1, q = 1)
 print(modelo_ARIMA)
 plot(modelo_ARIMA)
 
